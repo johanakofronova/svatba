@@ -26,17 +26,18 @@ body{background:var(--cream);color:var(--ink);font:400 17px/1.6 var(--sans);marg
 main{position:relative;overflow:hidden;min-height:100svh;display:flex;align-items:center;padding-inline:clamp(16px,6vw,72px);padding-block:clamp(120px,18vh,180px) 64px}
 .inner{position:relative;z-index:1;max-width:1000px;width:100%;margin:0 auto}
 h1{margin:0;font:400 clamp(92px,21vw,230px)/.86 var(--display);color:var(--green);text-transform:uppercase;letter-spacing:-.01em}
-.names{margin:.15em 0 0;font:italic clamp(42px,7.5vw,82px)/1.05 var(--serif);color:var(--green)}
+.names{margin:.15em 0 0;padding-left:.14em;font:italic clamp(42px,7.5vw,82px)/1.05 var(--serif);color:var(--green)}
 .meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 28px;margin-top:40px}
 .date{font:400 clamp(42px,6.5vw,64px)/1 var(--display);color:var(--green)}
 .place{font:400 clamp(22px,3vw,30px)/1 var(--serif);letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
-.soon{margin:44px 0 0;font:italic clamp(22px,2.8vw,28px)/1.35 var(--serif);max-width:30ch}
+.soon{margin:44px 0 0;padding-left:.1em;font:italic clamp(22px,2.8vw,28px)/1.35 var(--serif);max-width:30ch}
 .count{display:block;margin-top:10px;font-size:15px;opacity:.75}
 
-.balls{position:absolute;top:0;right:clamp(-30px,3vw,60px);width:clamp(160px,34vw,380px);height:100%;pointer-events:none}
+.balls{position:absolute;top:0;right:clamp(-20px,2vw,40px);width:clamp(200px,40vw,520px);height:100%;pointer-events:none}
 .hang{position:absolute;top:0;display:flex;flex-direction:column;align-items:center;transform-origin:top center;animation:sway 6s ease-in-out infinite alternate}
 .hang i{width:1.5px;background:var(--green)}
-.hang svg{display:block;margin-top:-1px}
+.hang span{width:var(--s);display:block;margin-top:-1px}
+.hang svg{display:block;width:100%;height:auto}
 .hang:nth-child(2){animation-duration:7.5s;animation-delay:-2s}
 .hang:nth-child(3){animation-duration:5.4s;animation-delay:-4s}
 @keyframes sway{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
@@ -48,9 +49,9 @@ h1{margin:0;font:400 clamp(92px,21vw,230px)/.86 var(--display);color:var(--green
 
 <main>
   <div class="balls" aria-hidden="true">
-    <div class="hang" style="left:6%"><i style="height:70px"></i><span data-ball="72"></span></div>
-    <div class="hang" style="left:40%"><i style="height:170px"></i><span data-ball="128"></span></div>
-    <div class="hang" style="left:78%"><i style="height:30px"></i><span data-ball="58"></span></div>
+    <div class="hang" style="left:2%"><i style="height:clamp(40px,8vh,100px)"></i><span data-ball style="--s:clamp(80px,11vw,170px)"></span></div>
+    <div class="hang" style="left:36%"><i style="height:clamp(110px,22vh,260px)"></i><span data-ball style="--s:clamp(120px,17vw,260px)"></span></div>
+    <div class="hang" style="left:76%"><i style="height:clamp(20px,4vh,50px)"></i><span data-ball style="--s:clamp(64px,8vw,130px)"></span></div>
   </div>
   <div class="inner">
     <h1>Bude<br>svatba</h1>
@@ -78,10 +79,10 @@ function ball(size, ink){
     }
   }
   const star='<path d="M30 22 L32 28 L38 30 L32 32 L30 38 L28 32 L22 30 L28 28 Z" fill="'+ink+'" stroke="none"/>';
-  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" stroke="${ink}" stroke-width="${(1.1*100/size).toFixed(2)}" stroke-linejoin="round"><circle cx="50" cy="50" r="48"/>${out.join('')}${star}</svg>`;
+  return `<svg viewBox="0 0 100 100" fill="none" stroke="${ink}" stroke-width="1.2" stroke-linejoin="round"><g vector-effect="non-scaling-stroke"><circle cx="50" cy="50" r="48" vector-effect="non-scaling-stroke"/>${out.join('').replace(/<polygon /g,'<polygon vector-effect="non-scaling-stroke" ')}</g>${star}</svg>`;
 }
 const ink=getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3A4724';
-document.querySelectorAll('[data-ball]').forEach(el=>{el.innerHTML=ball(+el.dataset.ball,ink)});
+document.querySelectorAll('[data-ball]').forEach(el=>{el.innerHTML=ball(0,ink)});
 </script>
 </body>
 </html>
