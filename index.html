@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#EEECE0">
+<title>Johanka a Šimon</title>
+<meta name="description" content="Bude svatba. Johanka a Šimon, 21. 8. 2027, Řehovice.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* Layout: jedna obrazovka jako přední strana oznámení, koule visí shora */
+:root{
+  --green:#3A4724;      /* olivová z finálního oznámení */
+  --cream:#EEECE0;
+  --ink:#2C361B;
+  --display:'Anton','Impact','Arial Narrow',sans-serif;
+  --serif:'Instrument Serif','Georgia',serif;
+  --sans:'Instrument Sans','Helvetica Neue',Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--cream);color:var(--ink);font:400 17px/1.6 var(--sans);margin:0}
+main{position:relative;overflow:hidden;min-height:100svh;display:flex;align-items:center;padding-inline:clamp(16px,6vw,72px);padding-block:clamp(120px,18vh,180px) 64px}
+.inner{position:relative;z-index:1;max-width:1000px;width:100%;margin:0 auto}
+h1{margin:0;font:400 clamp(92px,21vw,230px)/.86 var(--display);color:var(--green);text-transform:uppercase;letter-spacing:-.01em}
+.names{margin:.15em 0 0;font:italic clamp(42px,7.5vw,82px)/1.05 var(--serif);color:var(--green)}
+.meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 28px;margin-top:40px}
+.date{font:400 clamp(42px,6.5vw,64px)/1 var(--display);color:var(--green)}
+.place{font:400 clamp(22px,3vw,30px)/1 var(--serif);letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+.soon{margin:44px 0 0;font:italic clamp(22px,2.8vw,28px)/1.35 var(--serif);max-width:30ch}
+.count{display:block;margin-top:10px;font-size:15px;opacity:.75}
+
+.balls{position:absolute;top:0;right:clamp(-30px,3vw,60px);width:clamp(160px,34vw,380px);height:100%;pointer-events:none}
+.hang{position:absolute;top:0;display:flex;flex-direction:column;align-items:center;transform-origin:top center;animation:sway 6s ease-in-out infinite alternate}
+.hang i{width:1.5px;background:var(--green)}
+.hang svg{display:block;margin-top:-1px}
+.hang:nth-child(2){animation-duration:7.5s;animation-delay:-2s}
+.hang:nth-child(3){animation-duration:5.4s;animation-delay:-4s}
+@keyframes sway{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+@media (prefers-reduced-motion:reduce){.hang{animation:none}}
+@media (max-width:700px){.balls{opacity:.4;width:60vw;right:-8vw}}
+</style>
+</head>
+<body>
+
+<main>
+  <div class="balls" aria-hidden="true">
+    <div class="hang" style="left:6%"><i style="height:70px"></i><span data-ball="72"></span></div>
+    <div class="hang" style="left:40%"><i style="height:170px"></i><span data-ball="128"></span></div>
+    <div class="hang" style="left:78%"><i style="height:30px"></i><span data-ball="58"></span></div>
+  </div>
+  <div class="inner">
+    <h1>Bude<br>svatba</h1>
+    <p class="names">Johanka a Šimon</p>
+    <div class="meta">
+      <span class="date">21. 8. 2027</span>
+      <span class="place">Řehovice</span>
+    </div>
+    <p class="soon">Všechno postupně doplníme. Teď si jen zapiš termín do kalendáře.</p>
+  </div>
+</main>
+
+<script>
+function ball(size, ink){
+  const r=48,c=50,out=[],rad=Math.PI/180,bands=9;
+  for(let b=0;b<bands;b++){
+    const la0=-90+b*180/bands,la1=la0+180/bands,mid=(la0+la1)/2;
+    const n=Math.max(4,Math.round(18*Math.cos(mid*rad))),step=360/n,off=(b%2)*step/2;
+    for(let k=0;k<n;k++){
+      const lo0=-180+k*step+off+step*.12,lo1=lo0+step*.76;
+      if(lo0<-88||lo1>88) continue;
+      const a0=la0+(la1-la0)*.12,a1=la1-(la1-la0)*.12;
+      const p=(la,lo)=>[(c+r*Math.cos(la*rad)*Math.sin(lo*rad)).toFixed(1),(c-r*Math.sin(la*rad)).toFixed(1)].join(',');
+      out.push(`<polygon points="${p(a0,lo0)} ${p(a0,lo1)} ${p(a1,lo1)} ${p(a1,lo0)}"/>`);
+    }
+  }
+  const star='<path d="M30 22 L32 28 L38 30 L32 32 L30 38 L28 32 L22 30 L28 28 Z" fill="'+ink+'" stroke="none"/>';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" stroke="${ink}" stroke-width="${(1.1*100/size).toFixed(2)}" stroke-linejoin="round"><circle cx="50" cy="50" r="48"/>${out.join('')}${star}</svg>`;
+}
+const ink=getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#3A4724';
+document.querySelectorAll('[data-ball]').forEach(el=>{el.innerHTML=ball(+el.dataset.ball,ink)});
+</script>
+</body>
+</html>
